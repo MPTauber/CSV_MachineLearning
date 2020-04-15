@@ -43,4 +43,37 @@ merged_train = animals_train.join(animal_classes.set_index("Class_Number"),on='c
 ### Clean new dataframe
 merged_train = merged_train.drop(['Number_Of_Animal_Species_In_Class', 'Animal_Names'], axis=1)
 merged_train = merged_train.rename(columns = {"class_type":"class_number", "Class_Type":"class_name"})
-print(merged_train)
+
+### Splitting data for training and testing
+from sklearn.model_selection import train_test_split
+
+x = merged_train.drop(['class_number', 'class_name'], axis=1)
+#y = merged_train.drop(['class_number'], axis=1)
+y = merged_train["class_name"]
+
+
+
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.2, random_state = 777)
+
+
+
+### Not sure
+from sklearn.neighbors import KNeighborsClassifier
+
+knn = KNeighborsClassifier()
+
+knn.fit(X=x_train, y=y_train)
+
+predicted = knn.predict(X=x_test)
+expected = y_test
+
+#print(predicted[:20])
+#print(expected[:20])
+
+wrong = [(p,e) for (p,e) in zip(predicted, expected) if p !=e]
+
+animals_test2 = animals_test.drop(["animal_name"], axis=1)
+test = knn.predict(X= animals_test2)
+print(animals_test)
+print(test)
+
