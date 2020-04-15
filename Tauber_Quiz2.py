@@ -48,16 +48,12 @@ merged_train = merged_train.rename(columns = {"class_type":"class_number", "Clas
 from sklearn.model_selection import train_test_split
 
 x = merged_train.drop(['class_number', 'class_name'], axis=1)
-#y = merged_train.drop(['class_number'], axis=1)
 y = merged_train["class_name"]
-
-
 
 x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.2, random_state = 777)
 
 
-
-### Not sure
+### Training Model
 from sklearn.neighbors import KNeighborsClassifier
 
 knn = KNeighborsClassifier()
@@ -70,10 +66,24 @@ expected = y_test
 #print(predicted[:20])
 #print(expected[:20])
 
+# Checking how many wrong:
 wrong = [(p,e) for (p,e) in zip(predicted, expected) if p !=e]
+
+
+## Using model on animal_test
 
 animals_test2 = animals_test.drop(["animal_name"], axis=1)
 test = knn.predict(X= animals_test2)
-print(animals_test)
-print(test)
 
+
+# Making two series out of the test names and the predictions
+prediction = pd.Series(test)
+animal_name = pd.Series(animals_test["animal_name"])
+
+## Saving the two in the outcome dataframe
+
+Result_animals_prediction = pd.concat([animal_name, prediction], axis=1)
+
+# Save as csv
+
+Result_animals_prediction.to_csv("Tauber_Results_Animal_Predictions.csv")
