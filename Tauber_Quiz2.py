@@ -38,7 +38,9 @@ predictions = csv_to_df("predictions.csv")
 
 
 ### Change target attribute class_type in animals_train from Number to Name
-test_df = animals_train.join(animal_classes["Class_Type"],on='class_type')
+merged_train = animals_train.join(animal_classes.set_index("Class_Number"),on='class_type')
 
-test_df = test_df.rename(columns = {"class_type":"class_number", "Class_Type":"class_name"})
-print(test_df)
+### Clean new dataframe
+merged_train = merged_train.drop(['Number_Of_Animal_Species_In_Class', 'Animal_Names'], axis=1)
+merged_train = merged_train.rename(columns = {"class_type":"class_number", "Class_Type":"class_name"})
+print(merged_train)
