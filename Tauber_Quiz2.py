@@ -83,6 +83,7 @@ animal_name = pd.Series(animals_test["animal_name"])
 ## Saving the two in the outcome dataframe
 
 Result_animals_prediction = pd.concat([animal_name, prediction], axis=1)
+Result_animals_prediction = Result_animals_prediction.rename(columns = {0:"prediction"})
 
 # Save as csv
 
